@@ -1,11 +1,11 @@
 const User = require("../models/User");
 const Role = require("../models/Role");
 const Assistance = require("../models/Assistance");
+const Service = require("../models/Service")
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const { secret } = require("../config");
-const Review = require("../models/Review");
 const generateAccessToken = (id, roles) => {
   const payload = {
     id,
@@ -83,15 +83,32 @@ class authController {
   }
   async addReview(req, res) {
     try {
-      const { review, userName } = req.body;
-      const newReview = new Review({
-        review,
-        userName,
+      const { review, userName, serviceName } = req.body;
+
+      // Найти уже существующую запись сервиса в базе по имени
+      const existingService = await Service.findOne({
+        nameService: serviceName,
       });
-      await newReview.save();
-      res
-        .status(200)
-        .json({ success: true, message: "Отзыв успешно добавлен" });
+
+      if (existingService) {
+        // Создать новый объект отзыва
+        const newReview = { review, userName };
+
+        // Добавить новый отзыв в массив отзывов в записи сервиса
+        existingService.reviews.push(newReview);
+
+        // Сохранить изменения в базе данных
+        await existingService.save();
+
+        res
+          .status(200)
+          .json({ success: true, message: "Отзыв успешно добавлен" });
+      } else {
+        // Если запись сервиса не найдена, вернуть ошибку
+        return res
+          .status(404)
+          .json({ success: false, message: "Запись сервиса не найдена" });
+      }
     } catch (err) {
       console.error("Ошибка при добавлении отзыва:", err);
       res
