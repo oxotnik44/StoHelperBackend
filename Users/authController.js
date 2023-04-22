@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const { secret } = require("../config");
+const Review = require("../models/Review");
 const generateAccessToken = (id, roles) => {
   const payload = {
     id,
@@ -79,6 +80,27 @@ class authController {
       const assistance = await Assistance.find();
       res.json(assistance);
     } catch (e) {}
+  }
+  async addReview(req, res) {
+    try {
+      const { review, userName } = req.body;
+      const newReview = new Review({
+        review,
+        userName,
+      });
+      await newReview.save();
+      res
+        .status(200)
+        .json({ success: true, message: "Отзыв успешно добавлен" });
+    } catch (err) {
+      console.error("Ошибка при добавлении отзыва:", err);
+      res
+        .status(500)
+        .json({
+          success: false,
+          message: "Произошла ошибка при добавлении отзыва",
+        });
+    }
   }
 }
 
