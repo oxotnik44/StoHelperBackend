@@ -110,6 +110,58 @@ class authController {
       console.log(e);
     }
   }
+  async getReviews(req, res) {
+    try {
+      // Получение имени сервиса из параметров запроса или из другого источника, например, из тела запроса
+      const nameService = req.body.nameService; // или req.body.nameService, в зависимости от вашей реализации
+
+      // Использование модели Service и метода find для поиска отзывов (reviews) по имени сервиса
+      const reviews = await Service.find({ nameService }); // Предполагается, что модель Service имеет поле nameService, которое содержит имя сервиса
+
+      // Отправка отзывов на фронтенд в виде JSON-ответа
+      res.json(reviews);
+    } catch (err) {
+      // Обработка ошибок, если они возникнут
+      console.error(err);
+      res.status(500).json({ error: "Ошибка сервера" });
+    }
+  }
+  async addReview(req, res) {
+    try {
+      const { review, userName, nameService } = req.body;
+
+      // Найти уже существующую запись сервиса в базе по имени
+      const existingService = await Service.findOne({
+        nameService,
+      });
+
+      if (existingService) {
+        // Создать новый объект отзыва
+        const newReview = { review, userName };
+
+        // Добавить новый отзыв в массив отзывов в записи сервиса
+        existingService.reviews.push(newReview);
+
+        // Сохранить изменения в базе данных
+        await existingService.save();
+
+        res
+          .status(200)
+          .json({ success: true, message: "Отзыв успешно добавлен" });
+      } else {
+        // Если запись сервиса не найдена, вернуть ошибку
+        return res
+          .status(404)
+          .json({ success: false, message: "Запись сервиса не найдена" });
+      }
+    } catch (err) {
+      console.error("Ошибка при добавлении отзыва:", err);
+      res.status(500).json({
+        success: false,
+        message: "Произошла ошибка при добавлении отзыва",
+      });
+    }
+  }
 }
 
 module.exports = new authController();
