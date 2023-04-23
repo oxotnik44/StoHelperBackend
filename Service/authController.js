@@ -45,7 +45,7 @@ class authController {
       const hashPassword = bcrypt.hashSync(password, 7);
       const serviceRole = await Role.findOne({ value: "ADMIN" });
       const service = new Service({
-        login,
+        login: login,
         password: hashPassword,
         nameService: nameService,
         nameAdmin: nameAdmin,
