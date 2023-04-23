@@ -47,11 +47,11 @@ class authController {
       const service = new Service({
         login,
         password: hashPassword,
-        nameService:nameService,
+        nameService: nameService,
         nameAdmin: nameAdmin,
         webAddress: webAddress,
         startOfWork: startOfWork,
-        endOfWork:endOfWork,
+        endOfWork: endOfWork,
         telephoneNumber: telephoneNumber,
         city: city,
         address: address,
