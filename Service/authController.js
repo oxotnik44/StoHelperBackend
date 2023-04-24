@@ -34,6 +34,7 @@ class authController {
         city,
         address,
         index,
+        reviews,
         assistanceServices,
       } = req.body;
       const candidate = await Service.findOne({ login });
@@ -56,6 +57,7 @@ class authController {
         city: city,
         address: address,
         index: index,
+        reviews: reviews,
         roles: [serviceRole.value],
         assistanceServices: assistanceServices,
       });
