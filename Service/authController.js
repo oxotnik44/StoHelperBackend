@@ -118,14 +118,18 @@ class authController {
       // Использование модели Service и метода find для поиска отзывов (reviews) по имени сервиса
       const reviews = await Service.find({ nameService }); // Предполагается, что модель Service имеет поле nameService, которое содержит имя сервиса
 
+      // Создание массива, содержащего только отзывы (reviews)
+      const reviewsArray = reviews.map((review) => review.reviews); // Предполагается, что в модели Service поле с отзывом называется review
+
       // Отправка отзывов на фронтенд в виде JSON-ответа
-      res.json(reviews);
+      res.json(reviewsArray);
     } catch (err) {
       // Обработка ошибок, если они возникнут
       console.error(err);
       res.status(500).json({ error: "Ошибка сервера" });
     }
   }
+
   async addReview(req, res) {
     try {
       const { review, login, nameService } = req.body;
@@ -134,13 +138,16 @@ class authController {
       const existingService = await Service.findOne({
         nameService,
       });
+
+      // Найти пользователя в базе по логину
       const user = await User.findOne({
         login,
       });
 
       if (existingService && user) {
+        // Изменил условие на user, чтобы проверить наличие пользователя
         // Создать новый объект отзыва
-        const newReview = { review, login };
+        const newReview = { review, userName: login };
 
         // Добавить новый отзыв в массив отзывов в записи сервиса
         existingService.reviews.push(newReview);
@@ -152,10 +159,11 @@ class authController {
           .status(200)
           .json({ success: true, message: "Отзыв успешно добавлен" });
       } else {
-        // Если запись сервиса не найдена, вернуть ошибку
-        return res
-          .status(404)
-          .json({ success: false, message: "Запись сервиса не найдена" });
+        // Если запись сервиса не найдена или пользователь не найден, вернуть ошибку
+        return res.status(404).json({
+          success: false,
+          message: "Запись сервиса или пользователь не найдены",
+        });
       }
     } catch (err) {
       console.error("Ошибка при добавлении отзыва:", err);
