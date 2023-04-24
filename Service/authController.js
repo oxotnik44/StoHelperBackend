@@ -119,10 +119,12 @@ class authController {
       const reviews = await Service.find({ nameService }); // Предполагается, что модель Service имеет поле nameService, которое содержит имя сервиса
 
       // Создание массива, содержащего только отзывы (reviews)
-      const reviewsArray = reviews.map((review) => review.reviews); // Предполагается, что в модели Service поле с отзывом называется review
 
-      // Отправка отзывов на фронтенд в виде JSON-ответа
+      const reviewsArray = reviews.map((review) => review.reviews); // Предполагается, что в модели Service поле с отзывом называется review
       res.json(reviewsArray);
+
+      return reviewsArray;
+      // Отправка отзывов на фронтенд в виде JSON-ответа
     } catch (err) {
       // Обработка ошибок, если они возникнут
       console.error(err);
