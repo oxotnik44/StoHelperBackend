@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const { secret } = require("../config");
-
+const User = require("../models/User");
 const generateAccessToken = (id, roles) => {
   const payload = {
     id,
@@ -128,16 +128,19 @@ class authController {
   }
   async addReview(req, res) {
     try {
-      const { review, userName, nameService } = req.body;
+      const { review, login, nameService } = req.body;
 
       // Найти уже существующую запись сервиса в базе по имени
       const existingService = await Service.findOne({
         nameService,
       });
+      const user = await User.findOne({
+        login,
+      });
 
-      if (existingService) {
+      if (existingService && user) {
         // Создать новый объект отзыва
-        const newReview = { review, userName };
+        const newReview = { review, login };
 
         // Добавить новый отзыв в массив отзывов в записи сервиса
         existingService.reviews.push(newReview);
