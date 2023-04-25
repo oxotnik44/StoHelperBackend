@@ -15,7 +15,14 @@ const serviceSchema = new mongoose.Schema({
   index: { type: String, required: true },
   roles: [{ type: String, ref: "Role" }],
   assistanceServices: [{ type: String }],
-  reviews: [{ review: String, userName: String }],
+  reviews: [
+    {
+      review: {
+        review: String,
+        userName: String,
+      },
+    },
+  ],
 });
 
 // Создание модели Service на основе схемы
