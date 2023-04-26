@@ -17,10 +17,12 @@ const serviceSchema = new mongoose.Schema({
   assistanceServices: [{ type: String }],
   reviews: [
     {
-      review: {
-        review: String,
-        userName: String,
-      },
+      review: [
+        {
+          review: String,
+          userName: String,
+        },
+      ],
     },
   ],
 });

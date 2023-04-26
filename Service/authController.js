@@ -115,14 +115,14 @@ class authController {
     try {
       // Получение имени сервиса из параметров запроса или из другого источника, например, из тела запроса
       const nameService = req.body.nameService; // или req.body.nameService, в зависимости от вашей реализации
-  
+
       // Использование модели Service и метода find для поиска отзывов (reviews) по имени сервиса
       const reviews = await Service.find({ nameService }); // Предполагается, что модель Service имеет поле nameService, которое содержит имя сервиса
-  
+
       // Создание массива, содержащего только отзывы (reviews)
       const reviewsArray = reviews.flatMap((review) => review.reviews); // Используем flatMap() для получения плоского массива отзывов
       res.json(reviewsArray);
-  
+
       return reviewsArray;
       // Отправка отзывов на фронтенд в виде JSON-ответа
     } catch (err) {
@@ -131,7 +131,6 @@ class authController {
       res.status(500).json({ error: "Ошибка сервера" });
     }
   }
-  
 
   async addReview(req, res) {
     try {
@@ -148,8 +147,7 @@ class authController {
       });
 
       if (existingService && user) {
-        // Изменил условие на user, чтобы проверить наличие пользователя
-        // Создать новый объект отзыва
+        // Создать новый объект отзыва в соответствии с требуемым форматом
         const newReview = { review: { review, userName: login } };
 
         // Добавить новый отзыв в массив отзывов в записи сервиса
