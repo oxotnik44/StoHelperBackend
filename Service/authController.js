@@ -61,7 +61,7 @@ class authController {
         assistanceServices: assistanceServices,
       });
       await service.save();
-      return res.json({ message: "Пользователь успешно зарегистрирован" });
+      return res.json({ service });
     } catch (e) {
       console.log(e);
       res.status(400).json({ message: "Ошибка регистрации" });
@@ -74,8 +74,8 @@ class authController {
       const service = await Service.findOne({ login });
       if (!service) {
         return res
-          .status(400)
-          .json({ message: `Администратор с логином ${login} не найден` });
+            .status(400)
+            .json({message: `Администратор с логином ${login} не найден`});
       }
       const validPassword = bcrypt.compareSync(password, service.password);
       if (!validPassword) {
