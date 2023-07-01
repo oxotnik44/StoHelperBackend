@@ -193,8 +193,7 @@ class authController {
         );
 
         if (isSent) {
-          const isSend = true
-          res.status(200).json({ isSend });
+          res.status(200).json(true);
         } else {
           // Если запись с указанным логином не найдена, вернуть ошибку
           return res.status(404).json({
