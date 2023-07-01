@@ -14,6 +14,7 @@ router.post(
 router.post("/loginUser", controller.login);
 router.get("/users", controller.getUsers);
 router.get("/retrievedAssistance", controller.getAssistance);
+router.put("/sendApplication", controller.sendApplication);
 
 
 module.exports = router;

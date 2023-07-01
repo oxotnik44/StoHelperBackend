@@ -21,6 +21,18 @@ const serviceSchema = new mongoose.Schema({
       userName: String,
     },
   ],
+  application: [
+    {
+      login: String,
+      listApplication: [
+        {
+          application: String,
+        },
+      ],
+      date: String,
+      time: String,
+    },
+  ],
 });
 
 // Создание модели Service на основе схемы

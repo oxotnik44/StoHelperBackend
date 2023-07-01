@@ -59,6 +59,7 @@ class authController {
         reviews: [],
         roles: [serviceRole.value],
         assistanceServices: assistanceServices,
+        application:[]
       });
       await service.save();
       return res.json({ service });
