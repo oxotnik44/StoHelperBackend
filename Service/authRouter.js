@@ -15,8 +15,7 @@ router.post("/loginService", controller.login);
 router.post("/shippingAssistance", controller.getService);
 router.put("/addReview", controller.addReview);
 router.post("/getReviews", controller.getReviews);
-
-
+router.post("/getApplication", controller.getApplication);
 
 
 module.exports = router;

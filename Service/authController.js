@@ -59,7 +59,7 @@ class authController {
         reviews: [],
         roles: [serviceRole.value],
         assistanceServices: assistanceServices,
-        application:[]
+        application: [],
       });
       await service.save();
       return res.json({ service });
@@ -75,8 +75,8 @@ class authController {
       const service = await Service.findOne({ login });
       if (!service) {
         return res
-            .status(400)
-            .json({message: `Администратор с логином ${login} не найден`});
+          .status(400)
+          .json({ message: `Администратор с логином ${login} не найден` });
       }
       const validPassword = bcrypt.compareSync(password, service.password);
       if (!validPassword) {
@@ -116,13 +116,13 @@ class authController {
     try {
       // Получение имени сервиса из параметров запроса или из другого источника, например, из тела запроса
       const nameService = req.body.nameService; // или req.body.nameService, в зависимости от вашей реализации
-  
+
       // Использование модели Service и метода find для поиска отзывов (reviews) по имени сервиса
       const services = await Service.find({ nameService }); // Предполагается, что модель Service имеет поле nameService, которое содержит имя сервиса
-  
+
       // Создание массива, содержащего только отзывы (reviews)
       const reviewsArray = services.flatMap((service) => service.reviews); // Используем flatMap() для получения плоского массива отзывов
-  
+
       // Отправка отзывов на фронтенд в виде JSON-ответа
       res.json(reviewsArray);
     } catch (err) {
@@ -131,7 +131,6 @@ class authController {
       res.status(500).json({ error: "Ошибка сервера" });
     }
   }
-  
 
   async addReview(req, res) {
     try {
@@ -151,9 +150,9 @@ class authController {
         // Создать новый объект отзыва в соответствии с требуемым форматом
         const newReview = {
           review: review,
-          userName: login
+          userName: login,
         };
-  
+
         // Добавить новый отзыв в массив отзывов в записи сервиса
         existingService.reviews.push(newReview);
 
@@ -175,6 +174,46 @@ class authController {
       res.status(500).json({
         success: false,
         message: "Произошла ошибка при добавлении отзыва",
+      });
+    }
+  }
+  async getApplication(req, res) {
+    try {
+      const { nameService, login } = req.body;
+
+      // Найти уже существующую запись сервиса в базе по имени
+      const existingService = await Service.findOne({ nameService });
+      if (existingService) {
+        // Получить список application сервиса
+        const applications = existingService.application;
+
+        // Проверить, содержит ли список application хотя бы одну запись с указанным логином
+        const isSent = applications.some(
+          (application) => application.login === login
+        );
+
+        if (isSent) {
+          const isSend = true
+          res.status(200).json({ isSend });
+        } else {
+          // Если запись с указанным логином не найдена, вернуть ошибку
+          return res.status(404).json({
+            success: false,
+            message: "Запись с указанным логином не найдена в application",
+          });
+        }
+      } else {
+        // Если запись сервиса не найдена, вернуть ошибку
+        return res.status(404).json({
+          success: false,
+          message: "Запись сервиса не найдена",
+        });
+      }
+    } catch (err) {
+      console.error("Ошибка при получении application:", err);
+      res.status(500).json({
+        success: false,
+        message: "Произошла ошибка при получении application",
       });
     }
   }
