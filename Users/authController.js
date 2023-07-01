@@ -102,10 +102,11 @@ class authController {
 
       return res.json({ message: "Заявка успешно отправлена" });
     } catch (e) {
-    console.log(e);
-    res.status(400).json({ message: "Ошибка при отправке заявки" });
+      console.log(e);
+      res.status(400).json({ message: "Ошибка при отправке заявки" });
     }
   }
+  
 }
 
 module.exports = new authController();
