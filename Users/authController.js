@@ -86,7 +86,7 @@ class authController {
 
   async sendApplication(req, res) {
     try {
-      const { nameService, login, listApplication, date, time } = req.body;
+      const { nameService, login, listAssistances, date, time } = req.body;
       const service = await Service.findOne({ nameService });
 
       if (!service) {
@@ -95,7 +95,7 @@ class authController {
           .json({ message: `Сервис ${nameService} не найден` });
       }
 
-      service.application.push({ login, listApplication, date, time });
+      service.application.push({ login, listAssistances, date, time });
 
       // Сохранение обновленного объекта Service
       await service.save();

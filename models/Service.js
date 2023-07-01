@@ -24,11 +24,7 @@ const serviceSchema = new mongoose.Schema({
   application: [
     {
       login: String,
-      listApplication: [
-        {
-          application: String,
-        },
-      ],
+      listAssistances: [String],
       date: String,
       time: String,
     },
