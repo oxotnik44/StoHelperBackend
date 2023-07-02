@@ -194,13 +194,10 @@ class authController {
 
         if (isSent) {
           res.status(200).json(true);
-        } else {
-          // Если запись с указанным логином не найдена, вернуть ошибку
-          return res.status(404).json({
-            success: false,
-            message: "Запись с указанным логином не найдена в application",
-          });
         }
+        else if(!isSent){
+          res.status(200).json(false);
+        } 
       } else {
         // Если запись сервиса не найдена, вернуть ошибку
         return res.status(404).json({
